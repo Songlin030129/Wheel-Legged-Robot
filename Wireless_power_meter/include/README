@@ -1,0 +1,11 @@
+<!--
+ * @LastEditors: qingmeijiupiao
+ * @Description: 
+ * @Author: qingmeijiupiao
+ * @Date: 2024-05-26 20:23:08
+-->
+# /pic:
+这个文件夹里面是图片的数组
+# /static
+这个文件夹里面是底层硬件控制，不建议你自行修改的库文件
+
