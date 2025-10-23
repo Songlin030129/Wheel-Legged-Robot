@@ -1,0 +1,13 @@
+BasedOnStyle: Google
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+ColumnLimit: 150
+AllowShortIfStatementsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: None
+AllowShortLoopsOnASingleLine: false
+BreakBeforeBraces: Linux
+SpaceBeforeParens: ControlStatements
+PointerAlignment: Left
+SortIncludes: true
+IncludeBlocks: Preserve
