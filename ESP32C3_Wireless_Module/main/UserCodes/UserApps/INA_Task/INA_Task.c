@@ -10,7 +10,7 @@ void INA_Task()
     while (1) {
         if (ina226_read_shunt_voltage(&ina226, &vsh) == ESP_OK && ina226_read_bus_voltage(&ina226, &vbus) == ESP_OK &&
             ina226_read_current(&ina226, &cur) == ESP_OK && ina226_read_power(&ina226, &power) == ESP_OK) {
-            ESP_LOGI(TAG, "Vsh=%.6f V, Vbus=%.3f V, I=%.3f A, P=%.3f W", vsh, vbus, cur, power);
+            // ESP_LOGI(TAG, "Vsh=%.6f V, Vbus=%.3f V, I=%.3f A, P=%.3f W", vsh, vbus, cur, power);
         }
         vTaskDelay(100);
     }

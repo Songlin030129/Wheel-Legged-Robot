@@ -86,9 +86,9 @@ void Main()
     else
         printf("INA Task Create Fail\r\n");
 
-    // xReturn = xTaskCreate(BLETask, "BLETask", 2048, NULL, 23, NULL);
-    // if (xReturn == pdTRUE)
-    //     printf("BLE Task Create Success!\r\n");
-    // else
-    //     printf("BLE Task Create Fail\r\n");
+    xReturn = xTaskCreate(BLETask, "BLETask", 2048, NULL, 23, NULL);
+    if (xReturn == pdTRUE)
+        printf("BLE Task Create Success!\r\n");
+    else
+        printf("BLE Task Create Fail\r\n");
 }

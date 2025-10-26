@@ -3,9 +3,10 @@
 #include <stddef.h>
 #include <stdint.h>
 
-
 #define XBOX_INPUT_REPORT_LEN 16
-
+#define APPEARANCE_CONTROLLER 964
+#define UUID16_HID 0x1812
+#define UUID16_BAT 0x180F
 typedef struct {
     // 轴/扳机（原始 0..65535，小端）
     uint16_t joyLHori;
