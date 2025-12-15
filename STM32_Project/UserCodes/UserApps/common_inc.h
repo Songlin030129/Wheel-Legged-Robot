@@ -5,7 +5,6 @@
 
 extern "C" {
 #endif
-#define _constrain(amt, low, high) ((amt) < (low) ? (low) : ((amt) > (high) ? (high) : (amt)))
 #define _PI 3.1415926f
 #define _GRAVITY 9.8f
 /*---------------------------- C Scope ---------------------------*/
@@ -18,10 +17,12 @@ extern "C" {
 #include "fdcan.h"
 #include "main.h"
 #include "spi.h"
+#include "stdint.h"
 #include "stdio.h"
 #include "stm32h7xx_hal.h"
 #include "tim.h"
 #include "usart.h"
+
 void Main();
 
 #ifdef __cplusplus

@@ -18,10 +18,9 @@ void lkmotor_enable(LKMotor* _motor);
 void lkmotor_disable(LKMotor* _motor);
 void lkmotor_stop(LKMotor* _motor);
 void lkmotor_control(LKMotor* _motor, float _torque);
-void lkmotor_recv_callback(LKMotor* _motor, FDCAN_HandleTypeDef* _hcan,
-                           FDCAN_RxHeaderTypeDef rxheader, uint8_t* recvbuf);
+void lkmotor_recv_callback(LKMotor* _motor, FDCAN_HandleTypeDef* _hcan, FDCAN_RxHeaderTypeDef rxheader, uint8_t* recvbuf);
 
-extern LKMotor wheel_motor_left;
-extern LKMotor wheel_motor_right;
+// extern LKMotor wheel_motor_left;
+// extern LKMotor wheel_motor_right;
 
 #endif

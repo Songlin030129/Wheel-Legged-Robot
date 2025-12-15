@@ -121,7 +121,7 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef* hfdcan, uint32_t RxFifo0ITs)
             HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO0, &RxHeader1, g_Can1RxData);
             dmmotor_recv_callback(&joint_motor_left_1, hfdcan, RxHeader1, g_Can1RxData);
             dmmotor_recv_callback(&joint_motor_left_2, hfdcan, RxHeader1, g_Can1RxData);
-            lkmotor_recv_callback(&wheel_motor_left, hfdcan, RxHeader1, g_Can1RxData);
+            // lkmotor_recv_callback(&wheel_motor_left, hfdcan, RxHeader1, g_Can1RxData);
         }
     }
 }
@@ -136,7 +136,7 @@ void HAL_FDCAN_RxFifo1Callback(FDCAN_HandleTypeDef* hfdcan, uint32_t RxFifo1ITs)
 
             dmmotor_recv_callback(&joint_motor_right_1, hfdcan, RxHeader1, g_Can1RxData);
             dmmotor_recv_callback(&joint_motor_right_2, hfdcan, RxHeader1, g_Can1RxData);
-            lkmotor_recv_callback(&wheel_motor_right, hfdcan, RxHeader1, g_Can1RxData);
+            // lkmotor_recv_callback(&wheel_motor_right, hfdcan, RxHeader1, g_Can1RxData);
         }
     }
 }

@@ -13,24 +13,29 @@
 #ifndef __INS_TASK_H
 #define __INS_TASK_H
 
-#include "stdint.h"
 #include "BMI088driver.h"
+#include "mahony_filter.h"
+#include "stdint.h"
 
 #define INS_TASK_PERIOD 1
 
 #define PITCH_OFFSET 0.02
 #define ROLL_OFFSET -0.07
 
-typedef struct
-{
-    float q[4]; // 四元数估计值
+typedef struct {
+    uint32_t INS_DWT_Count;
+    float ins_dt;
+    float ins_time;
 
-    float Gyro[3];  // 角速度
-    float Accel[3]; // 加速度
-    float MotionAccel_b[3]; // 机体坐标加速度
-    float MotionAccel_n[3]; // 绝对系加速度
+    MahonyFilter mahony;
+    float q[4];  // 四元数估计值
 
-    float AccelLPF; // 加速度低通滤波系数
+    float Gyro[3];           // 角速度
+    float Accel[3];          // 加速度
+    float MotionAccel_b[3];  // 机体坐标加速度
+    float MotionAccel_n[3];  // 绝对系加速度
+
+    float AccelLPF;  // 加速度低通滤波系数
 
     // 加速度在绝对系的向量表示
     float xn[3];
@@ -48,19 +53,17 @@ typedef struct
     float YawAngleLast;
     float YawRoundCount;
 
-    float v_n;//绝对系沿着水平运动方向的速度
-    float x_n;//绝对系沿着水平运动方向的位移
+    float v_n;  // 绝对系沿着水平运动方向的速度
+    float x_n;  // 绝对系沿着水平运动方向的位移
 
     uint8_t ins_flag;
 } INS_t;
-
 
 /**
  * @brief 用于修正安装误差的参数,demo中可无视
  *
  */
-typedef struct
-{
+typedef struct {
     uint8_t flag;
 
     float scale[3];
@@ -70,12 +73,9 @@ typedef struct
     float Roll;
 } IMU_Param_t;
 
-extern void INS_Init(void);
 extern void INS_task(void);
 extern INS_t INS;
 void BodyFrameToEarthFrame(const float* vecBF, float* vecEF, float* q);
 void EarthFrameToBodyFrame(const float* vecEF, float* vecBF, float* q);
 
 #endif
-
-

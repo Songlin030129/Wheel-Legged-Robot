@@ -1,4 +1,5 @@
 #include "PID.h"
+#define _constrain(amt, low, high) ((amt) < (low) ? (low) : ((amt) > (high) ? (high) : (amt)))
 
 void pid_init(PIDController* _pid, float _kp, float _ki, float _kd, float _ramp, float _limit, float _deadzone)
 {

@@ -13,26 +13,10 @@
   *********************************************************************
   */
 
-#include "ins_task.h"
+#include "INS_Task.h"
 #include "bsp_dwt.h"
-#include "mahony_filter.h"
 
 INS_t INS;
-
-MahonyFilter mahony;
-Axis3f Gyro, Accel;
-float gravity[3] = {0, 0, 9.81f};
-
-uint32_t INS_DWT_Count = 0;
-float ins_dt = 0.0f;
-float ins_time;
-int stop_time;
-
-void INS_Init(void)
-{
-    mahony_init(&mahony, 1.0f, 0.0f, 0.001f);
-    INS.AccelLPF = 0.0089f;
-}
 
 void INS_task(void)
 {
@@ -40,43 +24,47 @@ void INS_task(void)
     while (BMI088_init(&hspi2, 0) != BMI088_NO_ERROR) {
         ;
     }
-    INS_Init();
-
+    mahony_init(&INS.mahony, 1.0f, 0.0f, 0.001f);
+    INS.AccelLPF = 0.0089f;
+    INS.ins_dt = 0.0f;
+    INS.INS_DWT_Count = 0;
     while (1) {
-        ins_dt = bsp_dwt_get_dt(&INS_DWT_Count);
+        INS.ins_dt = bsp_dwt_get_dt(&INS.INS_DWT_Count);
 
-        mahony.dt = ins_dt;
+        INS.mahony.dt = INS.ins_dt;
 
         BMI088_Read(&BMI088);
 
         INS.Accel[0] = BMI088.Accel[0];
         INS.Accel[1] = BMI088.Accel[1];
         INS.Accel[2] = BMI088.Accel[2];
-        Accel.x = BMI088.Accel[0];
-        Accel.y = BMI088.Accel[1];
-        Accel.z = BMI088.Accel[2];
         INS.Gyro[0] = BMI088.Gyro[0];
         INS.Gyro[1] = BMI088.Gyro[1];
         INS.Gyro[2] = BMI088.Gyro[2];
+        Axis3f Gyro, Accel;
         Gyro.x = BMI088.Gyro[0];
         Gyro.y = BMI088.Gyro[1];
         Gyro.z = BMI088.Gyro[2];
+        Accel.x = BMI088.Accel[0];
+        Accel.y = BMI088.Accel[1];
+        Accel.z = BMI088.Accel[2];
 
-        mahony_input(&mahony, Gyro, Accel);
-        mahony_update(&mahony);
-        mahony_output(&mahony);
+        mahony_input(&INS.mahony, Gyro, Accel);
+        mahony_update(&INS.mahony);
+        mahony_output(&INS.mahony);
 
-        INS.q[0] = mahony.q0;
-        INS.q[1] = mahony.q1;
-        INS.q[2] = mahony.q2;
-        INS.q[3] = mahony.q3;
+        INS.q[0] = INS.mahony.q0;
+        INS.q[1] = INS.mahony.q1;
+        INS.q[2] = INS.mahony.q2;
+        INS.q[3] = INS.mahony.q3;
 
         // 将重力从导航坐标系n转换到机体系b,随后根据加速度计数据计算运动加速度
         float gravity_b[3];
+        float gravity[3] = {0, 0, 9.81f};
         EarthFrameToBodyFrame(gravity, gravity_b, INS.q);
         for (uint8_t i = 0; i < 3; i++)  // 同样过一个低通滤波
         {
-            INS.MotionAccel_b[i] = (INS.Accel[i] - gravity_b[i]) * ins_dt / (INS.AccelLPF + ins_dt) + INS.MotionAccel_b[i] * INS.AccelLPF / (INS.AccelLPF + ins_dt);
+            INS.MotionAccel_b[i] = (INS.Accel[i] - gravity_b[i]) * INS.ins_dt / (INS.AccelLPF + INS.ins_dt) + INS.MotionAccel_b[i] * INS.AccelLPF / (INS.AccelLPF + INS.ins_dt);
         }
         BodyFrameToEarthFrame(INS.MotionAccel_b, INS.MotionAccel_n, INS.q);  // 转换回导航系n
 
@@ -91,12 +79,12 @@ void INS_task(void)
             INS.MotionAccel_n[2] = 0.0f;  // z轴
         }
 
-        if (ins_time > 3000.0f) {
+        if (INS.ins_time > 3000.0f) {
             INS.ins_flag = 1;  // 四元数基本收敛，加速度也基本收敛，可以开始底盘任务
             // 获取最终数据
-            INS.Pitch = mahony.roll - PITCH_OFFSET;
-            INS.Roll = mahony.pitch - ROLL_OFFSET;
-            INS.Yaw = mahony.yaw;
+            INS.Pitch = INS.mahony.roll - PITCH_OFFSET;
+            INS.Roll = INS.mahony.pitch - ROLL_OFFSET;
+            INS.Yaw = INS.mahony.yaw;
 
             if (INS.Yaw - INS.YawAngleLast > 3.1415926f) {
                 INS.YawRoundCount--;
@@ -106,7 +94,7 @@ void INS_task(void)
             INS.YawTotalAngle = 6.283f * INS.YawRoundCount + INS.Yaw;
             INS.YawAngleLast = INS.Yaw;
         } else {
-            ins_time++;
+            INS.ins_time++;
         }
 
         vTaskDelay(1);

@@ -1,7 +1,7 @@
 #include "LKMotor.h"
 
-LKMotor wheel_motor_left;
-LKMotor wheel_motor_right;
+// LKMotor wheel_motor_left;
+// LKMotor wheel_motor_right;
 
 void lkmotor_init(LKMotor* _motor, FDCAN_HandleTypeDef* _hcan, uint8_t _id)
 {
@@ -55,8 +55,7 @@ void lkmotor_control(LKMotor* _motor, float _torque)
     bsp_canx_send_data(_motor->hcan, _ID, data, 8);
 }
 
-void lkmotor_recv_callback(LKMotor* _motor, FDCAN_HandleTypeDef* _hcan,
-                           FDCAN_RxHeaderTypeDef rxheader, uint8_t* recvbuf)
+void lkmotor_recv_callback(LKMotor* _motor, FDCAN_HandleTypeDef* _hcan, FDCAN_RxHeaderTypeDef rxheader, uint8_t* recvbuf)
 {
     if (!_motor)
         return;
