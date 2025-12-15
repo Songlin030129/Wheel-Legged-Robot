@@ -1,0 +1,16 @@
+#ifndef BMI088MIDDLEWARE_H
+#define BMI088MIDDLEWARE_H
+
+#include "common_inc.h"
+
+extern void BMI088_ACCEL_NS_L(void);
+extern void BMI088_ACCEL_NS_H(void);
+
+extern void BMI088_GYRO_NS_L(void);
+extern void BMI088_GYRO_NS_H(void);
+
+extern uint8_t BMI088_read_write_byte(uint8_t reg);
+
+extern SPI_HandleTypeDef* BMI088_SPI;
+
+#endif
