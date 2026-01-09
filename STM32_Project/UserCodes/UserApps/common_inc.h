@@ -23,7 +23,7 @@ extern "C" {
 #include "tim.h"
 #include "usart.h"
 
-void Main();
+void APP();
 
 #ifdef __cplusplus
 }

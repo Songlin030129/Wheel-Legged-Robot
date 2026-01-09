@@ -11,7 +11,7 @@
 #include "common_inc.h"
 
 #define WIGHT_GAIN 20.0f
-#define WHEEL_RADIUS 0.065f
+#define WHEEL_RADIUS 0.09f
 typedef struct {
     float theta;
     float d_theta;

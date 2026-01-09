@@ -10,6 +10,14 @@ typedef enum {
     BMMOTOR_MODE_ENABLE = 0x0A,
 } BMMotor_Mode;
 
+typedef enum {
+    BMMOTOR_OK = 0,
+    BMMOTOR_ERR_PARAM,
+    BMMOTOR_ERR_FULL,
+    BMMOTOR_ERR_ID_RANGE,
+    BMMOTOR_ERR_ALREADY_USED,
+} BMMotorStatus;
+
 typedef struct {
     FDCAN_HandleTypeDef* hcan;
     uint8_t id;
@@ -36,15 +44,17 @@ extern BMMotor_Group bmmotor_group_right;
 extern BMMotor wheel_motor_left;
 extern BMMotor wheel_motor_right;
 
-void bmmotor_group_init(BMMotor_Group* _motor_group, FDCAN_HandleTypeDef* _hcan);
-void bmmotor_group_add_motor(BMMotor_Group* _motor_group, BMMotor* _motor, uint8_t _id);
+BMMotorStatus bmmotor_group_init(BMMotor_Group* _motor_group, FDCAN_HandleTypeDef* _hcan);
+BMMotorStatus bmmotor_group_add_motor(BMMotor_Group* _motor_group, BMMotor* _motor, uint8_t _id);
 void bmmotor_group_recv_callback(BMMotor_Group* _motor_group, FDCAN_HandleTypeDef* _hcan, FDCAN_RxHeaderTypeDef rxheader, uint8_t* recvbuf);
-void bmmotor_group_send_control(BMMotor_Group* _motor_group);
+BMMotorStatus bmmotor_group_send_control(BMMotor_Group* _motor_group);
 
-void bmmotor_set_torque(BMMotor* _motor, float _torque);
-void bmmotor_set_velocity(BMMotor* _motor, float _velocity);
-void bmmotor_set_voltage(BMMotor* _motor, int16_t _set);
+BMMotorStatus bmmotor_set_torque(BMMotor* _motor, float _torque);
+BMMotorStatus bmmotor_set_velocity(BMMotor* _motor, float _velocity);
+BMMotorStatus bmmotor_set_voltage(BMMotor* _motor, int16_t _set);
 
-void bmmotor_set_mode(BMMotor_Group* _motor_group, BMMotor* _motor, BMMotor_Mode _mode);
-void bmmotor_set_id(FDCAN_HandleTypeDef* _hcan, uint8_t _id);
+BMMotorStatus bmmotor_set_mode(BMMotor_Group* _motor_group, BMMotor* _motor, BMMotor_Mode _mode);
+BMMotorStatus bmmotor_set_id(FDCAN_HandleTypeDef* _hcan, uint8_t _id);
+BMMotorStatus bmmotor_calibrate(FDCAN_HandleTypeDef* _hcan);
+
 #endif

@@ -1,6 +1,7 @@
 #include "bsp_can.h"
 #include "DMMotor.h"
 #include "LKMotor.h"
+#include "bmmotor.h"
 #include "fdcan.h"
 #include "string.h"
 
@@ -119,9 +120,10 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef* hfdcan, uint32_t RxFifo0ITs)
             // /* Retrieve Rx messages from RX FIFO0 */
             memset(g_Can1RxData, 0, sizeof(g_Can1RxData));  // 接收前先清空数组
             HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO0, &RxHeader1, g_Can1RxData);
+
             dmmotor_recv_callback(&joint_motor_left_1, hfdcan, RxHeader1, g_Can1RxData);
             dmmotor_recv_callback(&joint_motor_left_2, hfdcan, RxHeader1, g_Can1RxData);
-            // lkmotor_recv_callback(&wheel_motor_left, hfdcan, RxHeader1, g_Can1RxData);
+            bmmotor_group_recv_callback(&bmmotor_group_left, hfdcan, RxHeader1, g_Can1RxData);
         }
     }
 }
@@ -134,9 +136,9 @@ void HAL_FDCAN_RxFifo1Callback(FDCAN_HandleTypeDef* hfdcan, uint32_t RxFifo1ITs)
             memset(g_Can2RxData, 0, sizeof(g_Can2RxData));
             HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO1, &RxHeader2, g_Can2RxData);
 
-            dmmotor_recv_callback(&joint_motor_right_1, hfdcan, RxHeader1, g_Can1RxData);
-            dmmotor_recv_callback(&joint_motor_right_2, hfdcan, RxHeader1, g_Can1RxData);
-            // lkmotor_recv_callback(&wheel_motor_right, hfdcan, RxHeader1, g_Can1RxData);
+            dmmotor_recv_callback(&joint_motor_right_1, hfdcan, RxHeader2, g_Can2RxData);
+            dmmotor_recv_callback(&joint_motor_right_2, hfdcan, RxHeader2, g_Can2RxData);
+            bmmotor_group_recv_callback(&bmmotor_group_right, hfdcan, RxHeader2, g_Can2RxData);
         }
     }
 }

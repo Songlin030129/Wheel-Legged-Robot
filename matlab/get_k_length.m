@@ -17,11 +17,11 @@ for leg_length = 0.1:0.01:0.3
 syms x(t) T R Iw mw M L LM theta(t) l phi(t) mp g Tp Ip IM
 syms f1 f2 f3 d_theta d_x d_phi theta0 x0 phi0 
 
-R1=0.0603;                        %驱动轮半径
+R1=0.09;                        %驱动轮半径
 L1=leg_length/2;                  %摆杆重心到驱动轮轴距离
 LM1=leg_length/2;                 %摆杆重心到其转轴距离
 l1=0.01;                          %机体质心距离转轴距离
-mw1=0.6;                          %驱动轮质量
+mw1=1.54;                          %驱动轮质量
 mp1=0.38;                          %杆质量
 M1=3.3;                             %机体质量
 Iw1=0.5*mw1*R1^2;                 %驱动轮转动惯量
@@ -59,7 +59,7 @@ B=double(B);
 %theta d_theta x d_x phi d_phi
 Q=diag([1 0.07 50 50 2000 0.6]); 
 %T Tp
-R=[5 0;0 1];       
+R=[2 0;0 1];       
 
 K=lqr(A,B,Q,R);
 
@@ -108,20 +108,20 @@ p24 = polyfit(leg_x,y24,3);
 p25 = polyfit(leg_x,y25,3);
 p26 = polyfit(leg_x,y26,3);
 
-fprintf('float Polynomial_Coefficient[12][4] = { \n');
-fprintf('{%9.3ff,%9.3ff,%9.3ff,%9.3ff},\n', p11(1), p11(2), p11(3), p11(4));
-fprintf('{%9.3ff,%9.3ff,%9.3ff,%9.3ff},\n', p12(1), p12(2), p12(3), p12(4));
-fprintf('{%9.3ff,%9.3ff,%9.3ff,%9.3ff},\n', p13(1), p13(2), p13(3), p13(4));
-fprintf('{%9.3ff,%9.3ff,%9.3ff,%9.3ff},\n', p14(1), p14(2), p14(3), p14(4));
-fprintf('{%9.3ff,%9.3ff,%9.3ff,%9.3ff},\n', p15(1), p15(2), p15(3), p15(4));
-fprintf('{%9.3ff,%9.3ff,%9.3ff,%9.3ff},\n', p16(1), p16(2), p16(3), p16(4));
+fprintf('float Poly_Coefficient[12][4] = { \n');
+fprintf('{%9.3ff,%9.3ff,%9.3ff,%9.3ff},    //\n', p11(1), p11(2), p11(3), p11(4));
+fprintf('{%9.3ff,%9.3ff,%9.3ff,%9.3ff},    //\n', p12(1), p12(2), p12(3), p12(4));
+fprintf('{%9.3ff,%9.3ff,%9.3ff,%9.3ff},    //\n', p13(1), p13(2), p13(3), p13(4));
+fprintf('{%9.3ff,%9.3ff,%9.3ff,%9.3ff},    //\n', p14(1), p14(2), p14(3), p14(4));
+fprintf('{%9.3ff,%9.3ff,%9.3ff,%9.3ff},    //\n', p15(1), p15(2), p15(3), p15(4));
+fprintf('{%9.3ff,%9.3ff,%9.3ff,%9.3ff},    //\n', p16(1), p16(2), p16(3), p16(4));
 
-fprintf('{%9.3ff,%9.3ff,%9.3ff,%9.3ff},\n', p21(1), p21(2), p21(3), p21(4));
-fprintf('{%9.3ff,%9.3ff,%9.3ff,%9.3ff},\n', p22(1), p22(2), p22(3), p22(4));
-fprintf('{%9.3ff,%9.3ff,%9.3ff,%9.3ff},\n', p23(1), p23(2), p23(3), p23(4));
-fprintf('{%9.3ff,%9.3ff,%9.3ff,%9.3ff},\n', p24(1), p24(2), p24(3), p24(4));
-fprintf('{%9.3ff,%9.3ff,%9.3ff,%9.3ff},\n', p25(1), p25(2), p25(3), p25(4));
-fprintf('{%9.3ff,%9.3ff,%9.3ff,%9.3ff} };\n', p26(1), p26(2), p26(3), p26(4));
+fprintf('{%9.3ff,%9.3ff,%9.3ff,%9.3ff},    //\n', p21(1), p21(2), p21(3), p21(4));
+fprintf('{%9.3ff,%9.3ff,%9.3ff,%9.3ff},    //\n', p22(1), p22(2), p22(3), p22(4));
+fprintf('{%9.3ff,%9.3ff,%9.3ff,%9.3ff},    //\n', p23(1), p23(2), p23(3), p23(4));
+fprintf('{%9.3ff,%9.3ff,%9.3ff,%9.3ff},    //\n', p24(1), p24(2), p24(3), p24(4));
+fprintf('{%9.3ff,%9.3ff,%9.3ff,%9.3ff},    //\n', p25(1), p25(2), p25(3), p25(4));
+fprintf('{%9.3ff,%9.3ff,%9.3ff,%9.3ff} };    //\n', p26(1), p26(2), p26(3), p26(4));
 
 
 % %函数反拟合绘制

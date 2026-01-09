@@ -1,38 +1,39 @@
 #include "Control_Task.h"
+#include "BMMotor.h"
 #include "DMMotor.h"
-#include "LKMotor.h"
 #include "LPF.h"
 #include "PID.h"
 #include "VMC.h"
 #include "bsp_dwt.h"
 #include "fdcan.h"
+
 Control control;
 
-// float Poly_Coefficient[12][4] = {
-// {  -83.887f,   84.362f,  -47.914f,   -1.953f},
-// {    6.225f,   -5.470f,   -4.232f,   -0.193f},
-// {   -0.280f,    0.457f,   -0.222f,   -1.377f},
-// {    2.741f,   -1.128f,   -0.755f,   -2.792f},
-// {    5.008f,   13.845f,  -13.343f,    4.110f},
-// {   -1.863f,    2.203f,   -1.024f,    0.292f},
-// {  131.481f,  -96.885f,   21.592f,    0.984f},
-// {   13.505f,  -11.082f,    3.174f,    0.064f},
-// {    6.651f,    0.137f,   -2.836f,    1.020f},
-// {   14.804f,   -1.274f,   -5.124f,    2.017f},
-// {   16.452f,  -21.772f,    9.681f,   43.438f},
-// {    0.968f,   -1.324f,    0.626f,    0.956f} };
-float Poly_Coefficient[12][4] = {{-88.969f, 92.009f, -58.901f, -2.321f},  //
-                                 {8.477f, -8.134f, -5.531f, -0.238f},     //
-                                 {-1.134f, 1.272f, -0.504f, -3.087f},     //
-                                 {5.591f, -2.643f, -1.451f, -3.946f},     //
-                                 {-14.836f, 32.931f, -20.541f, 5.471f},   //
-                                 {-2.679f, 2.938f, -1.277f, 0.359f},      //
-                                 {98.727f, -73.032f, 16.346f, 0.977f},    //
-                                 {10.128f, -8.361f, 2.434f, 0.077f},      //
-                                 {1.499f, 6.036f, -5.451f, 1.557f},       //
-                                 {3.912f, 5.480f, -6.101f, 1.926f},       //
-                                 {23.726f, -25.035f, 9.568f, 43.612f},    //
-                                 {1.173f, -1.354f, 0.579f, 0.970f}};      //
+// float Poly_Coefficient[12][4] = {{-88.969f, 92.009f, -58.901f, -2.321f},  //
+//                                  {8.477f, -8.134f, -5.531f, -0.238f},     //
+//                                  {-1.134f, 1.272f, -0.504f, -3.087f},     //
+//                                  {5.591f, -2.643f, -1.451f, -3.946f},     //
+//                                  {-14.836f, 32.931f, -20.541f, 5.471f},   //
+//                                  {-2.679f, 2.938f, -1.277f, 0.359f},      //
+//                                  {98.727f, -73.032f, 16.346f, 0.977f},    //
+//                                  {10.128f, -8.361f, 2.434f, 0.077f},      //
+//                                  {1.499f, 6.036f, -5.451f, 1.557f},       //
+//                                  {3.912f, 5.480f, -6.101f, 1.926f},       //
+//                                  {23.726f, -25.035f, 9.568f, 43.612f},    //
+//                                  {1.173f, -1.354f, 0.579f, 0.970f}};      //
+
+float Poly_Coefficient[12][4] = {{-99.676f, 116.800f, -90.263f, -1.754f},  //
+                                 {14.906f, -14.420f, -8.800f, -0.221f},    //
+                                 {-1.487f, 1.163f, -0.316f, -4.969f},      //
+                                 {9.493f, -5.416f, -1.613f, -6.547f},      //
+                                 {-112.814f, 98.884f, -32.913f, 5.304f},   //
+                                 {-3.562f, 3.435f, -1.313f, 0.395f},       //
+                                 {14.309f, -9.226f, 1.235f, 0.628f},       //
+                                 {1.198f, -0.818f, 0.093f, 0.074f},        //
+                                 {-21.999f, 19.360f, -6.393f, 0.909f},     //
+                                 {-28.499f, 24.901f, -8.172f, 1.164f},     //
+                                 {18.406f, -14.563f, 4.053f, 44.619f},     //
+                                 {0.850f, -0.784f, 0.276f, 1.033f}};       //
 
 static float LQR_Get_K(float* coe, float len)
 {
@@ -55,27 +56,28 @@ void Control_Task()
     }
     dmmotor_init(&joint_motor_left_1, &hfdcan1, 4, 3, CONTROL_MODE_MIT);
     dmmotor_init(&joint_motor_left_2, &hfdcan1, 6, 5, CONTROL_MODE_MIT);
-    // lkmotor_init(&wheel_motor_left, &hfdcan1, 1);
+    bmmotor_group_init(&bmmotor_group_left, &hfdcan1);
+    bmmotor_group_add_motor(&bmmotor_group_left, &wheel_motor_left, 1);
+    bmmotor_set_mode(&bmmotor_group_left, &wheel_motor_left, BMMOTOR_MODE_CURRENT);
 
     dmmotor_init(&joint_motor_right_1, &hfdcan2, 4, 3, CONTROL_MODE_MIT);
     dmmotor_init(&joint_motor_right_2, &hfdcan2, 6, 5, CONTROL_MODE_MIT);
-    // lkmotor_init(&wheel_motor_right, &hfdcan1, 2);
+    bmmotor_group_init(&bmmotor_group_right, &hfdcan2);
+    bmmotor_group_add_motor(&bmmotor_group_right, &wheel_motor_right, 1);
+    bmmotor_set_mode(&bmmotor_group_right, &wheel_motor_right, BMMOTOR_MODE_CURRENT);
 
     dmmotor_enable(&joint_motor_left_1);
     vTaskDelay(1);
     dmmotor_enable(&joint_motor_left_2);
     vTaskDelay(1);
-    // lkmotor_enable(&wheel_motor_left);
-    vTaskDelay(1);
+
     dmmotor_enable(&joint_motor_right_1);
     vTaskDelay(1);
     dmmotor_enable(&joint_motor_right_2);
     vTaskDelay(1);
-    // lkmotor_enable(&wheel_motor_right);
-    vTaskDelay(1);
 
-    vmc_init(&control.vmc_left, 0.6f, 0.12f, 0.2f, 0.2f, 0.12f, 0.1016f);
-    vmc_init(&control.vmc_right, 0.6f, 0.12f, 0.2f, 0.2f, 0.12f, 0.1016f);
+    vmc_init(&control.vmc_left, 1.54f, 0.12f, 0.2f, 0.2f, 0.12f, 0.1016f);
+    vmc_init(&control.vmc_right, 1.54f, 0.12f, 0.2f, 0.2f, 0.12f, 0.1016f);
 
     pid_init(&control.PID_L0_L, 300, 0, 10, 0, 100, 0);
     pid_init(&control.PID_L0_R, 300, 0, 10, 0, 100, 0);
@@ -93,7 +95,7 @@ void Control_Task()
     control.Tar_Roll = 0;
     control.Tar_x = 0;
     control.Tar_d_x = 0;
-    control.Tar_L0 = 0.15;
+    control.Tar_L0 = 0.22f;
 
     while (1) {
         control.dt = bsp_get_dt(&control.control_dwt_count);
@@ -102,14 +104,16 @@ void Control_Task()
             vTaskDelay(1);
             dmmotor_control_mit(&joint_motor_left_2, 0, 0, 0, 0, 0);
             vTaskDelay(1);
-            // lkmotor_control(&wheel_motor_right, 0);
+            bmmotor_set_torque(&wheel_motor_left, 0.0f);
+            bmmotor_group_send_control(&bmmotor_group_left);
             vTaskDelay(1);
 
             dmmotor_control_mit(&joint_motor_right_1, 0, 0, 0, 0, 0);
             vTaskDelay(1);
             dmmotor_control_mit(&joint_motor_right_2, 0, 0, 0, 0, 0);
             vTaskDelay(1);
-            // lkmotor_control(&wheel_motor_right, 0);
+            bmmotor_set_torque(&wheel_motor_right, 0.0f);
+            bmmotor_group_send_control(&bmmotor_group_right);
             vTaskDelay(1);
         } else {
             /*五连杆正运动学解算，计算腿长 L0, 状态变量 theta, d_theta, phi, d_phi*/
@@ -134,7 +138,7 @@ void Control_Task()
             control.sys_state_l.d_phi = control.vmc_left.d_phi;
             control.sys_state_r.d_phi = control.vmc_right.d_phi;
 
-            // control.sys_state_l.d_x = lpf_cal(&control.LPF_d_x, wheel_motor_left.velocity * WHEEL_RADIUS - wheel_motor_right.velocity * WHEEL_RADIUS) * 0.5f;
+            control.sys_state_l.d_x = lpf_cal(&control.LPF_d_x, wheel_motor_left.velocity * WHEEL_RADIUS - wheel_motor_right.velocity * WHEEL_RADIUS) * 0.5f;
             control.sys_state_r.d_x = control.sys_state_l.d_x;
 
             control.sys_state_l.x += (control.sys_state_l.d_x + control.sys_state_r.d_x) * control.dt * 0.5f;
@@ -224,8 +228,10 @@ void Control_Task()
             dmmotor_control_mit(&joint_motor_left_2, 0, 0, 0, 0, -control.vmc_left.torque_set[1]);
             dmmotor_control_mit(&joint_motor_right_2, 0, 0, 0, 0, control.vmc_right.torque_set[1]);
             vTaskDelay(1);
-            // lkmotor_control(&wheel_motor_left, lpf_cal(&control.LPF_wheelL_T, control.sys_input_l.wheel_T));
-            // lkmotor_control(&wheel_motor_right, -lpf_cal(&control.LPF_wheelR_T, control.sys_input_r.wheel_T));
+            bmmotor_set_torque(&wheel_motor_left, lpf_cal(&control.LPF_wheelL_T, control.sys_input_l.wheel_T));
+            bmmotor_set_torque(&wheel_motor_right, -lpf_cal(&control.LPF_wheelR_T, control.sys_input_r.wheel_T));
+            bmmotor_group_send_control(&bmmotor_group_left);
+            bmmotor_group_send_control(&bmmotor_group_right);
             vTaskDelay(1);
         }
     }

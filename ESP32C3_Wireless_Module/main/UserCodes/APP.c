@@ -1,4 +1,5 @@
 #include "BLE_Task.h"
+#include "Comm_Task.h"
 #include "Control_Task.h"
 #include "Debug_Task.h"
 #include "INA_Task.h"
@@ -30,6 +31,10 @@ void BLETask(void *argument)
 void INATask(void *argument)
 {
     INA_Task();
+}
+void COMMTask(void *argument)
+{
+    COMM_Task();
 }
 void Main()
 {
@@ -91,4 +96,10 @@ void Main()
         printf("BLE Task Create Success!\r\n");
     else
         printf("BLE Task Create Fail\r\n");
+
+    xReturn = xTaskCreate(COMMTask, "COMMTask", 2048, NULL, 23, NULL);
+    if (xReturn == pdTRUE)
+        printf("COMM Task Create Success!\r\n");
+    else
+        printf("COMM Task Create Fail\r\n");
 }

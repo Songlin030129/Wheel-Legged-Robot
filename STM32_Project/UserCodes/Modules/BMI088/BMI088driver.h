@@ -49,11 +49,11 @@
 #define BMI088_GYRO_125_SEN 0.000066579027251980956150958662738366f
 
 // 需手动修改
-#define GxOFFSET 0.0021142f
-#define GyOFFSET 0.0049118f
-#define GzOFFSET 0.0005f
-#define AxOFFSET -0.459304f
-#define AyOFFSET 0.1681887f
+#define GxOFFSET 0.0006359f
+#define GyOFFSET -0.001092f
+#define GzOFFSET 0.0002996f
+#define AxOFFSET 0.2876672f
+#define AyOFFSET 0.5454169f
 #define AzOFFSET 0.0f  // Z轴先不减去零飘值，因为零飘值包含重力加速度的值
 #define gNORM 9.84484291f
 
