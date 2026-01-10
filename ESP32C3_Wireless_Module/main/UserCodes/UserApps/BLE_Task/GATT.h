@@ -9,6 +9,7 @@
 #include "xbox_parser.h"
 
 int gatt_init();
+uint8_t gatt_is_connected();
 void gatt_handle_notify(uint16_t conn_handle, uint16_t attr_handle, const uint8_t *data, size_t len);
 int on_disc_svc(uint16_t conn_handle, const struct ble_gatt_error *error, const struct ble_gatt_svc *svc, void *arg);
 extern xbox_input_t g_output;

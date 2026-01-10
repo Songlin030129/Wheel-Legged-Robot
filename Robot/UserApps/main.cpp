@@ -12,19 +12,19 @@ static TaskHandle_t DBG_Task_Handle;
 static TaskHandle_t Control_Task_Handle;
 static TaskHandle_t Remote_Task_Handle;
 
-void INSTask(void* argument)
+void INSTask(void *argument)
 {
     INS_task();
 }
-void DBGTask(void* argument)
+void DBGTask(void *argument)
 {
     Debug_Task();
 }
-void ControlTask(void* argument)
+void ControlTask(void *argument)
 {
     Control_Task();
 }
-void RemoteControlTask(void* argument)
+void RemoteControlTask(void *argument)
 {
     Remote_Control_Task();
 }
@@ -34,17 +34,15 @@ void Main()
     DWT_Init(480);
 
     /* BMI088初始化 */
-    while (BMI088_init(&hspi2, 0) != BMI088_NO_ERROR)
-    {
+    while (BMI088_init(&hspi2, 0) != BMI088_NO_ERROR) {
         ;
     }
-    FDCAN1_Config();//can过滤器初始化
+    FDCAN1_Config(); // can过滤器初始化
     FDCAN2_Config();
     HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_SET);
 
-
     BaseType_t xReturn = pdTRUE;
-    xReturn = xTaskCreate(INSTask, "INSTask", 512, NULL, osPriorityNormal, &INS_Task_Handle);
+    xReturn            = xTaskCreate(INSTask, "INSTask", 512, NULL, osPriorityNormal, &INS_Task_Handle);
     if (xReturn == pdTRUE)
         printf("INS Task Create Success!\r\n");
     else
@@ -64,7 +62,4 @@ void Main()
         printf("Remote Task Task Create Success!\r\n");
     else
         printf("Remote Task Task Create Fail\r\n");
-
-
-
 }

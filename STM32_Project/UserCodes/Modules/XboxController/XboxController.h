@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include "common_inc.h"
 
-#define XBOXCONTROLLER_RX_BUFFER_SIZE_MAX 512
+#define XBOXCONTROLLER_RX_BUFFER_SIZE_MAX 1024
 
 #define KEY_ClickThreshold 20
 #define KEY_HoldThreshold 600

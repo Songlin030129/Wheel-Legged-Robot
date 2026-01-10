@@ -49,6 +49,7 @@ void xbox_init(XboxController* _xbox, UART_HandleTypeDef* _huart)
     memset(_xbox, 0, sizeof(XboxController));
     _xbox->huart = _huart;
     xbox_init_keys(_xbox);
+    __HAL_UART_FLUSH_DRREGISTER(_huart);
     HAL_UARTEx_ReceiveToIdle_DMA(_huart, (uint8_t*)_xbox->RxBuffer, XBOXCONTROLLER_RX_BUFFER_SIZE_MAX);
 }
 
@@ -89,6 +90,8 @@ void xbox_uart_receive_idle_dma_callback(XboxController* _xbox, UART_HandleTypeD
 
 void xbox_uart_err_callback(XboxController* _xbox, UART_HandleTypeDef* _huart)
 {
+    if (!_xbox || _huart != _xbox->huart)
+        return;
     // 停止当前的DMA传输
     HAL_UART_DMAStop(_huart);
 

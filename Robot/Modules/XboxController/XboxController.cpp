@@ -1,6 +1,5 @@
 #include "XboxController.h"
 XboxController xbox;
-
 void XboxController::Init(UART_HandleTypeDef *huart)
 {
     this->huart = huart;
@@ -21,6 +20,7 @@ void XboxController::Init(UART_HandleTypeDef *huart)
     AddKey(&btnDirLeft);
     AddKey(&btnDirRight);
     AddKey(&btnDirDown);
+    printf("xbox address: %p\n", this);
 }
 void XboxController::UartReceive_IDLE_DMA_Callback(UART_HandleTypeDef *huart, uint16_t Size)
 {

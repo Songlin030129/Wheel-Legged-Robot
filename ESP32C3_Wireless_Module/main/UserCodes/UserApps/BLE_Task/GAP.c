@@ -241,7 +241,10 @@ void scan_init(void)
     scan_retry_timer = xTimerCreate("scan_retry", pdMS_TO_TICKS(5000), pdFALSE, NULL, scan_retry_timer_callback);
     start_scan();
 }
-
+bool gap_is_connected(void)
+{
+    return g_conn_handle != 0xFFFF;
+}
 int gap_init()
 {
     /* Local variables */

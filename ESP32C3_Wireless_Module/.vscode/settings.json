@@ -16,7 +16,7 @@
     "--query-driver=C:\\Users\\86251\\.espressif\\tools\\xtensa-esp-elf\\esp-13.2.0_20240530\\xtensa-esp-elf\\bin\\xtensa-esp32-elf-gcc.exe",
     "--compile-commands-dir=${workspaceFolder}\\build"
   ],
-  "idf.portWin": "COM7",
+  "idf.portWin": "COM48",
   "idf.flashType": "UART",
   "chatgpt.commentCodeLensEnabled": false
 }

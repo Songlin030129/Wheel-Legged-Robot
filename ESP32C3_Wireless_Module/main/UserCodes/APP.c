@@ -8,6 +8,7 @@
 #include "bsp_nvs.h"
 #include "bsp_pwm.h"
 #include "bsp_spi.h"
+#include "bsp_uart.h"
 #include "common_inc.h"
 
 static const char *TAG = "APP";
@@ -65,7 +66,10 @@ void Main()
     if (err != ESP_OK) {
         ESP_LOGE(TAG, "timer_init failed: %d", (int)err);
     }
-
+    err = bsp_uart_init();
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "uart0 init failed: %d", (int)err);
+    }
     BaseType_t xReturn = pdTRUE;
     xReturn = xTaskCreate(DBGTask, "DBGTask", 2048, NULL, 23, NULL);
     if (xReturn == pdTRUE)
@@ -97,7 +101,7 @@ void Main()
     else
         printf("BLE Task Create Fail\r\n");
 
-    xReturn = xTaskCreate(COMMTask, "COMMTask", 2048, NULL, 23, NULL);
+    xReturn = xTaskCreate(COMMTask, "COMMTask", 4096, NULL, 23, NULL);
     if (xReturn == pdTRUE)
         printf("COMM Task Create Success!\r\n");
     else

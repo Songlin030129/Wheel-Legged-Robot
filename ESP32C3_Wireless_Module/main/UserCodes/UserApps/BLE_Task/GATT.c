@@ -1,6 +1,6 @@
 #include "GATT.h"
 static const char *TAG = "BLE_Task_GATT";
-
+static uint8_t gatt_connected_flag = 0;
 // 解析数据消息
 xbox_input_t g_output = {0};
 uint8_t g_battery = 0;
@@ -141,6 +141,7 @@ void gatt_handle_notify(uint16_t conn_handle, uint16_t attr_handle, const uint8_
 {
     if (attr_handle == hid_val_handle_notify && len == XBOX_INPUT_REPORT_LEN) {
         if (xbox_parse_input_report(data, len, &g_output) == 0) {
+            gatt_connected_flag = 1;
             // 示例：按 A 键时震动 0.5s（左右 60）
             // if (g_output.btnA && hid_val_handle_write) {
             //     xbox_out_t out;
@@ -153,7 +154,8 @@ void gatt_handle_notify(uint16_t conn_handle, uint16_t attr_handle, const uint8_
             //     xbox_out_to_bytes(&out, bytes);
             //     ble_gattc_write_flat(conn_handle, hid_val_handle_write, bytes, XBOX_OUT_REPORT_LEN, NULL, NULL);
             // }
-        }
+        } else
+            gatt_connected_flag = 0;
     } else if (attr_handle == bat_val_handle_notify && len >= 1) {
         g_battery = data[0];
         ESP_LOGI(TAG, "Battery data:%d", g_battery);
@@ -162,6 +164,12 @@ void gatt_handle_notify(uint16_t conn_handle, uint16_t attr_handle, const uint8_
         ESP_LOGI(TAG, "bat_val_handle_notify:%d", bat_val_handle_notify);
     }
 }
+
+uint8_t gatt_is_connected()
+{
+    return gatt_connected_flag;
+}
+
 int gatt_init()
 {
     /* Local variables */

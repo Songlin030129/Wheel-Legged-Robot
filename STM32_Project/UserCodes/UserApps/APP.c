@@ -47,9 +47,9 @@ void APP()
         printf("Control Task Create Success!\r\n");
     else
         printf("Control Task Create Fail\r\n");
-    // xReturn = xTaskCreate(RemoteControlTask, "RemoteControlTask", 512, NULL, osPriorityNormal, NULL);
-    // if (xReturn == pdTRUE)
-    //     printf("Remote Task Task Create Success!\r\n");
-    // else
-    //     printf("Remote Task Task Create Fail\r\n");
+    xReturn = xTaskCreate(RemoteControlTask, "RemoteControlTask", 512, NULL, osPriorityNormal, NULL);
+    if (xReturn == pdTRUE)
+        printf("Remote Task Task Create Success!\r\n");
+    else
+        printf("Remote Task Task Create Fail\r\n");
 }

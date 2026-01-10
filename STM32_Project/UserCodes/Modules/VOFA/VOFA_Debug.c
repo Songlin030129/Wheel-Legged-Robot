@@ -58,6 +58,9 @@ void vofa_debug_uart_receive_idle_dma_callback(VOFA_Debug *_dbg, UART_HandleType
 
 void vofa_debug_uart_err_callback(VOFA_Debug *_dbg, UART_HandleTypeDef *_huart)
 {
+    if (!_dbg || _huart != _dbg->huart) {
+        return;
+    }
     // 停止当前的DMA传输
     HAL_UART_DMAStop(_huart);
 

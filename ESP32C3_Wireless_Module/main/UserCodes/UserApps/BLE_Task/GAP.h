@@ -10,8 +10,7 @@
 #include "xbox_hid_report.h"
 #include "xbox_parser.h"
 
-
 int gap_init();
 void scan_init(void);
-
+bool gap_is_connected(void);
 #endif
