@@ -20,7 +20,7 @@ void Debug_Task()
         // bmmotor_set_torque(&wheel_motor_left, torque_l);
         // bmmotor_group_send_control(&bmmotor_group_left);
 
-        // bmmotor_set_torque(&wheel_motor_right, -torque_r);
+        // bmmotor_set_torque(&wheel_motor_right, torque_r);
         // bmmotor_group_send_control(&bmmotor_group_right);
 
         vTaskDelay(10);

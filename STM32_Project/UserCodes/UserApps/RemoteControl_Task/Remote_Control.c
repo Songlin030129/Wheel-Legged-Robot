@@ -27,11 +27,11 @@ void Remote_Control_Task(void)
     xbox_init(&xbox, &huart7);
     while (1) {
         xbox_keys_handler(&xbox);
-        static float max_vel = 2.0f;
+        static float max_vel = 0.5f;
         if (xbox.connected) {
             if (control.Control_Enable) {
                 float v_x = (float)(xbox.trigRT - xbox.trigLT) * max_vel / 1024;
-                slope_following(&v_x, &v_set, 0.01f);
+                slope_following(&v_x, &v_set, 0.005f);
                 control.Tar_d_x = v_set;
                 control.Tar_x += control.Tar_d_x * 0.01f;
 

@@ -22,18 +22,18 @@ Control control;
 //                                  {23.726f, -25.035f, 9.568f, 43.612f},    //
 //                                  {1.173f, -1.354f, 0.579f, 0.970f}};      //
 
-float Poly_Coefficient[12][4] = {{-99.676f, 116.800f, -90.263f, -1.754f},  //
-                                 {14.906f, -14.420f, -8.800f, -0.221f},    //
-                                 {-1.487f, 1.163f, -0.316f, -4.969f},      //
-                                 {9.493f, -5.416f, -1.613f, -6.547f},      //
-                                 {-112.814f, 98.884f, -32.913f, 5.304f},   //
-                                 {-3.562f, 3.435f, -1.313f, 0.395f},       //
-                                 {14.309f, -9.226f, 1.235f, 0.628f},       //
-                                 {1.198f, -0.818f, 0.093f, 0.074f},        //
-                                 {-21.999f, 19.360f, -6.393f, 0.909f},     //
-                                 {-28.499f, 24.901f, -8.172f, 1.164f},     //
-                                 {18.406f, -14.563f, 4.053f, 44.619f},     //
-                                 {0.850f, -0.784f, 0.276f, 1.033f}};       //
+float Poly_Coefficient[12][4] = {{-107.922f, 139.780f, -129.109f, -1.936f},  //
+                                 {23.095f, -23.445f, -13.520f, -0.244f},     //
+                                 {-7.437f, 7.506f, -2.761f, -8.730f},        //
+                                 {6.424f, 0.416f, -6.560f, -10.287f},        //
+                                 {-24.365f, 31.957f, -16.320f, 4.652f},      //
+                                 {-2.171f, 2.568f, -1.200f, 0.514f},         //
+                                 {179.424f, -139.858f, 35.338f, 1.201f},     //
+                                 {19.097f, -16.490f, 5.446f, 0.099f},        //
+                                 {-13.205f, 29.006f, -18.083f, 4.748f},      //
+                                 {-10.000f, 27.967f, -18.795f, 5.354f},      //
+                                 {23.366f, -23.325f, 8.686f, 16.296f},       //
+                                 {1.817f, -2.044f, 0.869f, 0.938f}};         //
 
 static float LQR_Get_K(float* coe, float len)
 {
@@ -83,13 +83,13 @@ void Control_Task()
     pid_init(&control.PID_L0_R, 300, 0, 10, 0, 100, 0);
     pid_init(&control.PID_Roll, 100, 0, 1, 0, 10, 0);
     pid_init(&control.PID_Tp, 10, 0, 0, 0, 2, 0);
-    pid_init(&control.PID_Yaw, 2.0f, 0, 0.4f, 0, 2, 0);
+    pid_init(&control.PID_Yaw, 2.5f, 0, 0.2f, 0, 2, 0);
 
     lpf_init(&control.LPF_d_x, 0.05f);
     lpf_init(&control.LPF_tar_yaw, 0.05f);
     lpf_init(&control.LPF_tar_L0, 0.05f);
-    lpf_init(&control.LPF_wheelL_T, 0.02f);
-    lpf_init(&control.LPF_wheelR_T, 0.02f);
+    lpf_init(&control.LPF_wheelL_T, 0.03f);
+    lpf_init(&control.LPF_wheelR_T, 0.03f);
 
     control.Tar_Yaw = 0;
     control.Tar_Roll = 0;
@@ -204,8 +204,8 @@ void Control_Task()
             control.vmc_left.F0 = WIGHT_GAIN + control.PID_L0_L.output_value;
             control.vmc_right.F0 = WIGHT_GAIN + control.PID_L0_R.output_value;
 
-            control.vmc_left.F0 += control.PID_Roll.output_value;
-            control.vmc_right.F0 -= control.PID_Roll.output_value;
+            // control.vmc_left.F0 += control.PID_Roll.output_value;
+            // control.vmc_right.F0 -= control.PID_Roll.output_value;
             mySaturate(&control.vmc_left.F0, -100.0f, 100.0f);
             mySaturate(&control.vmc_right.F0, -100.0f, 100.0f);
 
@@ -218,8 +218,8 @@ void Control_Task()
             mySaturate(&control.vmc_left.torque_set[1], -3.0f, 3.0f);
             mySaturate(&control.vmc_right.torque_set[0], -3.0f, 3.0f);
             mySaturate(&control.vmc_right.torque_set[1], -3.0f, 3.0f);
-            mySaturate(&control.sys_input_l.wheel_T, -4.0f, 4.0f);
-            mySaturate(&control.sys_input_r.wheel_T, -4.0f, 4.0f);
+            mySaturate(&control.sys_input_l.wheel_T, -3.0f, 3.0f);
+            mySaturate(&control.sys_input_r.wheel_T, -3.0f, 3.0f);
 
             /*发送电机控制信号*/
             dmmotor_control_mit(&joint_motor_left_1, 0, 0, 0, 0, -control.vmc_left.torque_set[0]);

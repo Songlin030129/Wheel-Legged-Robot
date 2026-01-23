@@ -57,9 +57,9 @@ B=double(B);
 % R=[35 0;0 1];      
 
 %theta d_theta x d_x phi d_phi
-Q=diag([1 0.07 50 50 2000 0.6]); 
+Q=diag([1 0.1 250 200 300 1.0]); 
 %T Tp
-R=[2 0;0 1];       
+R=[3 0;0 1];       
 
 K=lqr(A,B,Q,R);
 

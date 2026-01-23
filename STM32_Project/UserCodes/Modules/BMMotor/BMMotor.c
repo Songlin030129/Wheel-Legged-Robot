@@ -94,6 +94,7 @@ BMMotorStatus bmmotor_group_send_control(BMMotor_Group* _motor_group)
                 float_value = motor_temp->torque_set / 0.8f / 55 * 32767;
                 float_value = _constrain(float_value, -16383, 16383);
                 int16_value = (int16_t)float_value;
+                // printf("t_set:%f, f_val:%f, int_val:%d\r\n", motor_temp->torque_set, float_value, int16_value);
                 data[i * 2] = (int16_value >> 8) & 0xFF;
                 data[i * 2 + 1] = int16_value & 0xFF;
                 break;
